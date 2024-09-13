@@ -1,17 +1,17 @@
+import { auth } from '@/auth';
 import Providers from '@/components/layout/providers';
 import { Toaster } from '@/components/ui/toaster';
 import '@uploadthing/react/styles.css';
 import type { Metadata } from 'next';
-import NextTopLoader from 'nextjs-toploader';
 import { Inter } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
-import { auth } from '@/auth';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Bakhit AI',
+  description: 'Admin Panel for Bakhit AI to manage users and content'
 };
 
 export default async function RootLayout({
@@ -20,6 +20,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+
   return (
     <html lang="en">
       <body
