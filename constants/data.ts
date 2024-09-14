@@ -124,19 +124,19 @@ export const navItems: NavItem[] = [
     label: 'user'
   },
   {
-    title: 'Employee',
-    href: '/dashboard/employee',
-    icon: 'employee',
-    label: 'employee'
+    title: 'Preferences',
+    href: '/dashboard/preferences',
+    icon: 'preferences',
+    label: 'preferences'
   },
   {
-    title: 'Profile',
-    href: '/dashboard/profile',
-    icon: 'profile',
-    label: 'profile'
+    title: 'Preferences by Location',
+    href: '/dashboard/preferences_location',
+    icon: 'preferences_locations',
+    label: 'preferences_locations'
   },
   {
-    title: 'Login',
+    title: 'Logout',
     href: '/',
     icon: 'login',
     label: 'login'

@@ -1,6 +1,5 @@
 'use client';
 
-import { TrendingUp } from 'lucide-react';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 
 import {
@@ -17,33 +16,50 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
-const chartData = [
-  { month: 'January', desktop: 186, mobile: 80 },
-  { month: 'February', desktop: 305, mobile: 200 },
-  { month: 'March', desktop: 237, mobile: 120 },
-  { month: 'April', desktop: 73, mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'June', desktop: 214, mobile: 140 }
-];
+import { ChartBarIcon } from '@heroicons/react/24/outline';
+import useApi from '../../actions/useApi';
+import { Spinner } from '../ui/spinner';
 
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'hsl(var(--chart-1))'
-  },
-  mobile: {
-    label: 'Mobile',
-    color: 'hsl(var(--chart-2))'
-  }
-} satisfies ChartConfig;
+// Import your useApi hook
+// Adjust the import path as needed
+
+// Helper function to format date
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  // Format date as 'Sep 2'
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
 
 export function AreaGraph() {
+  const { data, isLoading, error } = useApi('user/statistics/messages');
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (error || !data) {
+    return <div>Error loading data</div>;
+  }
+
+  // Prepare the chart data
+  const chartData = data.map((item: any) => ({
+    date: formatDate(item.date),
+    count: item.count
+  }));
+
+  const chartConfig = {
+    count: {
+      label: 'Messages',
+      color: '#4F46E5' // Use your desired color here
+    }
+  } satisfies ChartConfig;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
+        <CardTitle>Messages per Day</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Showing messages per day for the selected period
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -52,7 +68,6 @@ export function AreaGraph() {
           className="aspect-auto h-[310px] w-full"
         >
           <AreaChart
-            accessibilityLayer
             data={chartData}
             margin={{
               left: 12,
@@ -61,31 +76,21 @@ export function AreaGraph() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dot" />}
             />
             <Area
-              dataKey="mobile"
-              type="natural"
-              fill="var(--color-mobile)"
+              dataKey="count"
+              type="monotone"
+              fill="#4F46E5" // Use your desired color here
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-              stackId="a"
+              stroke="#4F46E5" // Use your desired color here
             />
           </AreaChart>
         </ChartContainer>
@@ -94,10 +99,15 @@ export function AreaGraph() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              <div className="flex items-center gap-2 font-medium leading-none">
+                People are chatting a lot <ChartBarIcon className="h-4 w-4" />
+              </div>
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              {chartData.length > 0 &&
+                `${chartData[0].date} - ${
+                  chartData[chartData.length - 1].date
+                }`}
             </div>
           </div>
         </div>

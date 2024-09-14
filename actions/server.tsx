@@ -1,7 +1,7 @@
 'use server';
 
 import axios from 'axios';
-import validateURL from '../../utils/validate-url';
+import validateURL from '../utils/validate-url';
 
 export const fetcher = (url: string) => {
   if (!validateURL(url)) {

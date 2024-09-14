@@ -16,21 +16,23 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Input } from './input';
+import { useRouter } from 'next/navigation';
 import { Button } from './button';
+import { Input } from './input';
 import { ScrollArea, ScrollBar } from './scroll-area';
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends object, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchKey: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends object, TValue>({
   columns,
   data,
   searchKey
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const table = useReactTable({
     data,
     columns,
@@ -38,8 +40,14 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel()
   });
 
-  /* this can be used to get the selectedrows 
-  console.log("value", table.getFilteredSelectedRowModel()); */
+  const handleRowClick = (row: TData) => {
+    if ('id' in row && row.id) {
+      router.push(`/dashboard/user/${row.id}`);
+    } else {
+      console.error('Row does not have a valid id property');
+      // Optionally, you can show an error message to the user
+    }
+  };
 
   return (
     <>
@@ -77,6 +85,8 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  onClick={() => handleRowClick(row.original)}
+                  className="cursor-pointer hover:bg-muted/50"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -103,10 +113,10 @@ export function DataTable<TData, TValue>({
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        {/* <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"

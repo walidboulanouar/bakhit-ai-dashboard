@@ -1,3 +1,4 @@
+'use client';
 import { AreaGraph } from '@/components/charts/area-graph';
 import { BarGraph } from '@/components/charts/bar-graph';
 import { PieGraph } from '@/components/charts/pie-graph';
@@ -13,8 +14,26 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChatBubbleIcon } from '@radix-ui/react-icons';
+import { ClockIcon, SendHorizonalIcon, UsersIcon } from 'lucide-react';
+import useApi from '../../actions/useApi';
+import { Spinner } from '../../components/ui/spinner';
 
-export default function page() {
+export default function Page() {
+  const { isLoading, data: apiData, error } = useApi('user/statistics/all');
+
+  if (isLoading) {
+    return <Spinner></Spinner>;
+  }
+  if (error) {
+    return (
+      <PageContainer scrollable={true}>
+        <div className="space-y-4">
+          <div>Error loading data.</div>
+        </div>
+      </PageContainer>
+    );
+  }
   return (
     <PageContainer scrollable={true}>
       <div className="space-y-2">
@@ -39,101 +58,73 @@ export default function page() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Revenue
+                    Total Users
                   </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
+                  <UsersIcon className="h-4 w-4" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
+                  <div className="text-2xl font-bold">
+                    {apiData?.totalUsers}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
+                    Chatted with Bakhit
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Subscriptions
+                    Total Messages
                   </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
+                  <ChatBubbleIcon className="h-4 w-4" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
+                  <div className="text-2xl font-bold">
+                    {Number(apiData?.totalMessages)}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <rect width="20" height="14" x="2" y="5" rx="2" />
-                    <path d="M2 10h20" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
-                  <p className="text-xs text-muted-foreground">
-                    +19% from last month
+                    Sent to Bakhit
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Active Now
+                    Average Response Time
                   </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                  </svg>
+                  <ClockIcon className="h-4 w-4" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
+                  <div className="text-2xl font-bold">
+                    {Number(apiData?.averageResponseTime).toFixed(1)} seconds
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    +201 since last hour
+                    {apiData?.averageResponseTime < 1
+                      ? 'Super fast replies!'
+                      : apiData?.averageResponseTime < 5
+                      ? 'Quick to respond'
+                      : 'Taking a bit longer'}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Average Messages Per User
+                  </CardTitle>
+                  <SendHorizonalIcon className="h-4 w-4" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {Number(apiData?.avgMessagesPerUser)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {apiData?.avgMessagesPerUser < 1
+                      ? 'Low engagement'
+                      : apiData?.avgMessagesPerUser < 5
+                      ? 'Moderate engagement'
+                      : 'High engagement'}
                   </p>
                 </CardContent>
               </Card>
@@ -144,9 +135,9 @@ export default function page() {
               </div>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Most Active users</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    People loved to chat with Bakhit
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

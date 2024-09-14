@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-import { TrendingUp } from 'lucide-react';
 import { Label, Pie, PieChart } from 'recharts';
 
 import {
@@ -18,50 +16,98 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
-const chartData = [
-  { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-  { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-  { browser: 'firefox', visitors: 287, fill: 'var(--color-firefox)' },
-  { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-  { browser: 'other', visitors: 190, fill: 'var(--color-other)' }
+import { ChatBubbleBottomCenterIcon } from '@heroicons/react/24/outline';
+import useApi from '../../actions/useApi';
+import { Spinner } from '../ui/spinner';
+
+// Import the useApi hook
+// Adjust the import path as necessary
+
+// Days of the week array
+const daysOfWeek = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday'
 ];
 
-const chartConfig = {
-  visitors: {
-    label: 'Visitors'
-  },
-  chrome: {
-    label: 'Chrome',
-    color: 'hsl(var(--chart-1))'
-  },
-  safari: {
-    label: 'Safari',
-    color: 'hsl(var(--chart-2))'
-  },
-  firefox: {
-    label: 'Firefox',
-    color: 'hsl(var(--chart-3))'
-  },
-  edge: {
-    label: 'Edge',
-    color: 'hsl(var(--chart-4))'
-  },
-  other: {
-    label: 'Other',
-    color: 'hsl(var(--chart-5))'
-  }
-} satisfies ChartConfig;
+// Static colors for each day
+const dayColors = {
+  Sunday: '#E53E3E', // Red
+  Monday: '#DD6B20', // Orange
+  Tuesday: '#D69E2E', // Yellow
+  Wednesday: '#38A169', // Green
+  Thursday: '#3182CE', // Blue
+  Friday: '#805AD5', // Purple
+  Saturday: '#D53F8C' // Pink
+};
 
 export function PieGraph() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+  const { data, isLoading, error } = useApi('user/statistics/messages');
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (error || !data) {
+    return <div>Error loading data</div>;
+  }
+
+  // Process data to aggregate counts per day of the week
+  const messagesPerDay = data.reduce((acc: any, curr: any) => {
+    const date = new Date(curr.date);
+    const dayIndex = date.getDay(); // 0 (Sunday) to 6 (Saturday)
+    const dayName = daysOfWeek[dayIndex];
+
+    if (!acc[dayName]) {
+      acc[dayName] = 0;
+    }
+
+    acc[dayName] += curr.count;
+
+    return acc;
+  }, {});
+
+  // Convert messagesPerDay object to array for chartData
+  const chartData = daysOfWeek.map((day: any) => ({
+    day: day,
+    messages: messagesPerDay[day] || 0,
+    fill: dayColors[day as keyof typeof dayColors] || '#000000'
+  }));
+
+  // Calculate total messages
+  const totalMessages = chartData.reduce((acc, curr) => acc + curr.messages, 0);
+
+  // Create chartConfig for each day
+  const chartConfig = {
+    messages: {
+      label: 'Messages'
+    },
+    ...daysOfWeek.reduce((acc: any, day: any) => {
+      acc[day.toLowerCase()] = {
+        label: day,
+        color: dayColors[day as keyof typeof dayColors] || '#000000'
+      };
+      return acc;
+    }, {})
+  } satisfies ChartConfig;
+  // Calculate total messages
+
+  // Find the day with the highest messages
+  const mostActiveDay = chartData.reduce((prev, current) => {
+    return prev.messages > current.messages ? prev : current;
+  });
+
+  // Handle case when there are no messages
+  const mostActiveDayName = mostActiveDay.day || 'no day';
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Messages by Day of the Week</CardTitle>
+        <CardDescription>2 Sept - 12 Sept</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -75,10 +121,11 @@ export function PieGraph() {
             />
             <Pie
               data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              dataKey="messages"
+              nameKey="day"
               innerRadius={60}
               strokeWidth={5}
+              isAnimationActive={false}
             >
               <Label
                 content={({ viewBox }) => {
@@ -95,18 +142,19 @@ export function PieGraph() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalMessages.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Messages
                         </tspan>
                       </text>
                     );
                   }
+                  return null;
                 }}
               />
             </Pie>
@@ -115,10 +163,11 @@ export function PieGraph() {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          People are chatting a lot {mostActiveDayName}
+          <ChatBubbleBottomCenterIcon className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Messages per day of the week
         </div>
       </CardFooter>
     </Card>

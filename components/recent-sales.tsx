@@ -1,67 +1,39 @@
+import useApi from '@/actions/useApi'; // Assuming you have a hook for API calls
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Spinner } from './ui/spinner';
 
 export function RecentSales() {
+  const { isLoading, data: apiData, error } = useApi('user/statistics/all');
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+  if (error) return <div>Error loading recent users</div>;
+
+  // Get the most recent users (assuming most recent is the default order)
+  const recentUsers = apiData?.mostActiveUsers.slice(0, 5); // Adjust the number if needed
+
   return (
     <div className="space-y-8">
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/01.png" alt="Avatar" />
-          <AvatarFallback>OM</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Olivia Martin</p>
-          <p className="text-sm text-muted-foreground">
-            olivia.martin@email.com
-          </p>
+      {recentUsers.map((user: any) => (
+        <div key={user.id} className="flex items-center">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src="/avatars/default.png" alt={user.name} />
+            <AvatarFallback>
+              {user.name ? user.name[0] : user.phoneNumber.slice(-2)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="ml-4 space-y-1">
+            <p className="text-sm font-medium leading-none">
+              {user.name || 'Unknown User'}
+            </p>
+            <p className="text-sm text-muted-foreground">{user.phoneNumber}</p>
+          </div>
+          <div className="ml-auto font-medium">
+            {user.conversation?._count?.messages} messages
+          </div>
         </div>
-        <div className="ml-auto font-medium">+$1,999.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="flex h-9 w-9 items-center justify-center space-y-0 border">
-          <AvatarImage src="/avatars/02.png" alt="Avatar" />
-          <AvatarFallback>JL</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Jackson Lee</p>
-          <p className="text-sm text-muted-foreground">jackson.lee@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$39.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/03.png" alt="Avatar" />
-          <AvatarFallback>IN</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
-          <p className="text-sm text-muted-foreground">
-            isabella.nguyen@email.com
-          </p>
-        </div>
-        <div className="ml-auto font-medium">+$299.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/04.png" alt="Avatar" />
-          <AvatarFallback>WK</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">William Kim</p>
-          <p className="text-sm text-muted-foreground">will@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$99.00</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/05.png" alt="Avatar" />
-          <AvatarFallback>SD</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Sofia Davis</p>
-          <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
-        </div>
-        <div className="ml-auto font-medium">+$39.00</div>
-      </div>
+      ))}
     </div>
   );
 }
