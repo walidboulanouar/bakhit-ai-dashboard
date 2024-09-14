@@ -10,8 +10,16 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 export function UserNav() {
+  const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
+
+  {
+    loading ? 'Logging out...' : 'Log out';
+  }
+  const router = useRouter();
   if (session) {
     return (
       <DropdownMenu>
@@ -37,7 +45,14 @@ export function UserNav() {
               </p>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => signOut()}>
+          <DropdownMenuItem
+            onClick={async () => {
+              setLoading(true);
+              await signOut({ redirect: false });
+              setLoading(false);
+              router.push('/');
+            }}
+          >
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

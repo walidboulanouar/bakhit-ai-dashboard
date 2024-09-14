@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { Icons } from '@/components/icons';
+import { useSidebar } from '@/hooks/useSidebar';
 import { cn } from '@/lib/utils';
 import { NavItem } from '@/types';
+import { signOut } from 'next-auth/react';
 import { Dispatch, SetStateAction } from 'react';
-import { useSidebar } from '@/hooks/useSidebar';
 import {
   Tooltip,
   TooltipContent,
@@ -28,11 +29,11 @@ export function DashboardNav({
 }: DashboardNavProps) {
   const path = usePathname();
   const { isMinimized } = useSidebar();
+  const router = useRouter();
 
   if (!items?.length) {
     return null;
   }
-
 
   return (
     <nav className="grid items-start gap-2">
@@ -50,8 +51,12 @@ export function DashboardNav({
                       path === item.href ? 'bg-accent' : 'transparent',
                       item.disabled && 'cursor-not-allowed opacity-80'
                     )}
-                    onClick={() => {
+                    onClick={async () => {
                       if (setOpen) setOpen(false);
+                      if (item.isLogout) {
+                        await signOut({ redirect: false });
+                        router.push('/');
+                      }
                     }}
                   >
                     <Icon className={`ml-3 size-5 flex-none`} />

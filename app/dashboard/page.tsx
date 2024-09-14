@@ -16,12 +16,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { ClockIcon, SendHorizonalIcon, UsersIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import useApi from '../../actions/useApi';
 import { Spinner } from '../../components/ui/spinner';
 
 export default function Page() {
   const { isLoading, data: apiData, error } = useApi('user/statistics/all');
-
+  const { data: session, status } = useSession();
   if (isLoading) {
     return <Spinner></Spinner>;
   }
@@ -39,7 +40,7 @@ export default function Page() {
       <div className="space-y-2">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-2xl font-bold tracking-tight">
-            Hi, Welcome back to Bakhit AI 👋
+            Hi {session?.user?.name}, Welcome back to Bakhit AI 👋
           </h2>
           <div className="hidden items-center space-x-2 md:flex">
             <CalendarDateRangePicker />

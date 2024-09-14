@@ -1,38 +1,71 @@
-import { NextAuthConfig } from 'next-auth';
-import CredentialProvider from 'next-auth/providers/credentials';
+import axios from 'axios';
 
-const authConfig = {
+import type { NextAuthConfig } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+
+const authConfig: NextAuthConfig = {
   providers: [
-    CredentialProvider({
+    CredentialsProvider({
+      name: 'Credentials',
       credentials: {
-        email: {
-          type: 'email'
-        },
-        password: {
-          type: 'password'
-        }
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials, req) {
-        const user = {
-          id: '1',
-          name: 'admin',
-          email: credentials?.email as string
-        };
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
+        try {
+          // Make a POST request to your backend /auth/login endpoint
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}auth/login`,
+            {
+              email: credentials?.email,
+              password: credentials?.password
+            }
+          );
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+          const user = response.data;
+          // If the login was successful and a token was returned
+          if (user && user.token) {
+            // Return an object with user data
+            return {
+              id: user.agent.id,
+              name: user.agent.name,
+              email: user.agent.email,
+              token: user.token
+            };
+          } else {
+            // Return null if user data could not be retrieved
+            return null;
+          }
+        } catch (error) {
+          // Handle errors (e.g., wrong credentials)
+          console.error('Login error:', error);
+          return null;
         }
       }
     })
   ],
   pages: {
-    signIn: '/' //sigin page
-  }
-} satisfies NextAuthConfig;
+    signIn: '/login' // Adjust the sign-in page route
+  },
+  callbacks: {
+    async jwt({ token, user }: { token: any; user: any }) {
+      // Persist the token from the user object
+      if (user) {
+        token.accessToken = user.token;
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }: { session: any; token: any }) {
+      // Make the token available in the session
+      if (token) {
+        session.user.id = token.id;
+        session.accessToken = token.accessToken;
+      }
+      return session;
+    }
+  },
+  secret: process.env.NEXTAUTH_SECRET // Ensure you have this in your .env file
+};
 
 export default authConfig;
