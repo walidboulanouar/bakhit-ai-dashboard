@@ -1,8 +1,8 @@
 'use client';
 import { User } from '@/constants/data';
+import { formatPhoneNumber } from '@/utils/format-phone-numebr';
 import { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
-import { formatPhoneNumber } from '../../../app/dashboard/user/[userId]/page';
 
 export const columns: ColumnDef<User>[] = [
   {

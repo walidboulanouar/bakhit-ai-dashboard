@@ -10,28 +10,8 @@ import { ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { Button } from '../../../../components/ui/button';
 import { Spinner } from '../../../../components/ui/spinner';
-export function formatPhoneNumber(phoneNumber: string) {
-  // Ensure that the phone number starts with a '+'
-  let formattedNumber = phoneNumber;
+import { formatPhoneNumber } from '@/utils/format-phone-numebr';
 
-  // Remove any non-numeric characters (optional)
-  formattedNumber = phoneNumber.replace(/[^\d]/g, '');
-
-  // check first 3 digits
-  if (formattedNumber.length > 10) {
-    // Qatar number
-    return `+${formattedNumber.slice(0, 3)} ${formattedNumber.slice(
-      3,
-      6
-    )}-${formattedNumber.slice(6, 8)}-${formattedNumber.slice(8)}`;
-  } else {
-    // French number
-    return `+${formattedNumber.slice(0, 2)} ${formattedNumber.slice(
-      2,
-      5
-    )}-${formattedNumber.slice(5, 7)}-${formattedNumber.slice(7)}`;
-  }
-}
 export default function Page({ params }: { params: { userId: string } }) {
   const breadcrumbItems = [
     { title: 'Dashboard', link: '/dashboard' },
