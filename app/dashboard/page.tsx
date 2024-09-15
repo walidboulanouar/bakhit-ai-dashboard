@@ -2,7 +2,6 @@
 import { AreaGraph } from '@/components/charts/area-graph';
 import { BarGraph } from '@/components/charts/bar-graph';
 import { PieGraph } from '@/components/charts/pie-graph';
-import { CalendarDateRangePicker } from '@/components/date-range-picker';
 import PageContainer from '@/components/layout/page-container';
 import { RecentSales } from '@/components/recent-sales';
 import { Button } from '@/components/ui/button';
@@ -43,7 +42,6 @@ export default function Page() {
             Hi {session?.user?.name}, Welcome back to Bakhit AI 👋
           </h2>
           <div className="hidden items-center space-x-2 md:flex">
-            <CalendarDateRangePicker />
             <Button>Generate Report</Button>
           </div>
         </div>

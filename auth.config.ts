@@ -22,9 +22,13 @@ const authConfig: NextAuthConfig = {
             }
           );
 
+          console.log("response",response)
+
           const user = response.data;
           // If the login was successful and a token was returned
           if (user && user.token) {
+
+            
             // Return an object with user data
             return {
               id: user.agent.id,

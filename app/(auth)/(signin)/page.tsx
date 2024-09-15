@@ -24,6 +24,8 @@ export default function LoginPage() {
       password
     });
 
+    console.log('res', res);
+
     setLoading(false);
 
     if (res?.error) {

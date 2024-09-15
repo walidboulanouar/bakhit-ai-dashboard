@@ -60,6 +60,7 @@ export const Icons = {
   add: Plus,
   warning: AlertTriangle,
   user: User,
+  report: File, // Suggested icon for report
   arrowRight: ArrowRight,
   help: HelpCircle,
   pizza: Pizza,

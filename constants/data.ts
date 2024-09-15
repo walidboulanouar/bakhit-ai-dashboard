@@ -136,9 +136,69 @@ export const navItems: NavItem[] = [
     label: 'preferences_locations'
   },
   {
+    title:"AI Report",
+    href:"/dashboard/report",
+    icon:'report',
+    label:'Report'
+  },
+  {
     title: 'Logout',
     href: '/',
     icon: 'logout',
     label: 'logout'
   }
 ];
+
+
+
+// types/report.ts
+
+export interface UserSegmentationItem {
+  persona: string;
+  description: string;
+  preferences: string[];
+  dislikes: string[];
+}
+
+export interface PreferenceCorrelation {
+  preferenceA: string;
+  preferenceB: string;
+}
+
+export interface LocationTrendsItem {
+  location: string;
+  uniquePreferences: string[];
+  correlations: PreferenceCorrelation[];
+}
+
+export interface SeasonalInfluence {
+  season: string;
+  influence: string;
+}
+
+export interface BehavioralPatterns {
+  seasonalInfluences: SeasonalInfluence[];
+  preferenceCorrelations: PreferenceCorrelation[];
+}
+
+export interface Recommendation {
+  insight: string;
+  action: string;
+}
+
+export interface AiResponse {
+  userSegmentation: UserSegmentationItem[];
+  locationTrends: LocationTrendsItem[];
+  behavioralPatterns: BehavioralPatterns;
+  recommendations: Recommendation[];
+}
+
+export interface ReportData {
+  id: string;
+  createdAt: string;
+  promptUsed: string;
+  type: string;
+  data: any; // Adjust as per actual data structure if needed
+  aiResponse: AiResponse;
+  cost: string;
+}

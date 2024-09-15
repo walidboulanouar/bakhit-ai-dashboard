@@ -31,13 +31,13 @@ export function DataTable<TData extends object, TValue>({
   columns,
   data,
   searchKey
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, unknown>) { // Changed TValue to unknown
   const router = useRouter();
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel()
+    getFilteredRowModel: getFilteredRowModel(),
   });
 
   const handleRowClick = (row: TData) => {
