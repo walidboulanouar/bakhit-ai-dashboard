@@ -1,10 +1,10 @@
 {
-  "name": "nextshcdndashboardstarter",
+  "name": "Bakhit AI Dashboard admin panel",
   "version": "0.1.0",
   "private": true,
   "author": {
-    "name": "Kiran",
-    "url": "https://github.com/Kiranism"
+    "name": "Walid Boulanouar",
+    "url": "https://diezagency.com"
   },
   "scripts": {
     "dev": "next dev",
