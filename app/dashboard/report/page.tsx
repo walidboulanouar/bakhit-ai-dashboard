@@ -240,7 +240,7 @@ export default function ReportPage() {
           </p>
           <p className="text-xs text-gray-500">
             Generating a report costs approximately{' '}
-            <span className="font-semibold">$0.1</span>.
+            <span className="font-semibold">0.01$</span>.
           </p>
         </div>
         <button

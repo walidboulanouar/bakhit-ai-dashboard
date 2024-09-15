@@ -4,8 +4,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn Dashboard Starter',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Bakhit AI Admin Panel',
+  description: 'Admin panel for managing users and content with Bakhit AI'
 };
 
 export default function DashboardLayout({
