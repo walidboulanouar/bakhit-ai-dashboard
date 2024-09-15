@@ -78,8 +78,7 @@ export default function PreferencesPage() {
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <Heading title="User Preferences by Location" description="" />
-        <div className="text-center text-lg text-gray-700">
-          
+        <div className="text-center text-lg">
           <p>📍 Click on each location to view detailed preferences.</p>
         </div>
         <Accordion type="multiple">

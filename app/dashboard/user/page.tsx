@@ -11,7 +11,7 @@ export default function Page() {
     <PageContainer>
       <div className="space-y-2">
         <Breadcrumbs items={breadcrumbItems} />
-        <div className="text-center text-lg text-gray-700">
+        <div className="text-center text-lg">
           <p>👉 Click on each user to view their conversation history.</p>
         </div>
         <UserClient />
