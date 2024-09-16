@@ -29,6 +29,7 @@ import {
   SeasonalInfluence,
   UserSegmentationItem
 } from '../../../constants/data';
+import PageContainer from '../../../components/layout/page-container';
 
 // Define columns for DataTables
 const userSegmentationColumns: ColumnDef<UserSegmentationItem, any>[] = [
@@ -227,6 +228,7 @@ export default function ReportPage() {
   ];
 
   return (
+    <PageContainer scrollable={true}>
     <div className="p-4 md:p-8">
       <Breadcrumbs items={breadcrumbItems} />
       <Heading
@@ -253,7 +255,7 @@ export default function ReportPage() {
       </div>
 
       {/* User Segmentation Section */}
-      <Accordion type="single" collapsible className="mt-6">
+      <Accordion type="single" className="mt-6">
         <AccordionItem
           value="user-segmentation"
           className="rounded-lg bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
@@ -368,5 +370,6 @@ export default function ReportPage() {
         </AccordionItem>
       </Accordion>
     </div>
+    </PageContainer>
   );
 }
