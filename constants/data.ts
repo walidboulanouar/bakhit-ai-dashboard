@@ -130,12 +130,6 @@ export const navItems: NavItem[] = [
     label: 'preferences'
   },
   {
-    title: 'Preferences by Location',
-    href: '/dashboard/preferences_location',
-    icon: 'preferences_locations',
-    label: 'preferences_locations'
-  },
-  {
     title:"AI Report",
     href:"/dashboard/report",
     icon:'report',
