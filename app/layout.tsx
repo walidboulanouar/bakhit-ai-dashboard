@@ -10,8 +10,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Bakhit AI',
-  description: 'Admin Panel for Bakhit AI to manage users and content'
+  title: 'Soolifly AI',
+  description: 'Admin Panel for Soolifly AI to manage users and content'
 };
 
 export default async function RootLayout({

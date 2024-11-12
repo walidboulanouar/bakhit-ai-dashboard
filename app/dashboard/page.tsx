@@ -39,7 +39,7 @@ export default function Page() {
       <div className="space-y-2">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-2xl font-bold tracking-tight">
-            Hi {session?.user?.name}, Welcome back to Bakhit AI 👋
+            Hi {session?.user?.name}, Welcome back to Soolifly AI 👋
           </h2>
           <div className="hidden items-center space-x-2 md:flex">
             <Button>Generate Report</Button>
@@ -66,7 +66,7 @@ export default function Page() {
                     {apiData?.totalUsers}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Chatted with Bakhit
+                    Chatted with Soolifly
                   </p>
                 </CardContent>
               </Card>
@@ -82,7 +82,7 @@ export default function Page() {
                     {Number(apiData?.totalMessages)}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Sent to Bakhit
+                    Sent to Soolifly
                   </p>
                 </CardContent>
               </Card>
@@ -136,7 +136,7 @@ export default function Page() {
                 <CardHeader>
                   <CardTitle>Most Active users</CardTitle>
                   <CardDescription>
-                    People loved to chat with Bakhit
+                    People loved to chat with Soolifly
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

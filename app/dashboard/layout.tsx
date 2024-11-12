@@ -1,11 +1,10 @@
 import Header from '@/components/layout/header';
 import Sidebar from '@/components/layout/sidebar';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Bakhit AI Admin Panel',
-  description: 'Admin panel for managing users and content with Bakhit AI'
+  title: 'Soolifly AI Admin Panel',
+  description: 'Admin panel for managing users and content with Soolifly AI'
 };
 
 export default function DashboardLayout({
